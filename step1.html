@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第一步</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/steps.css" rel="stylesheet">
+  <link href="css/webuploader.css" rel="stylesheet">
+  <style>
+  .cell_box{
+    padding: 12px 10px;
+  }
+  .cell_title{
+      font-size: 15px;
+      color:#626466;
+  }
+  .pic_cell{
+      padding:6px 0;
+  }
+  .cell_lizi{
+      width: 130px;
+      height: 87px;
+  }
+  .cell_p{
+      color: #abafb2;
+      margin-bottom: 4px;
+  }
+  </style>
+</head>
+<!-- 头部 -->
+<div class="container" style="padding:0 10px;">
+    <div class="col-xs-4 col-md-3 top_left_title"><img src="./img/common_title_black.png"></div>
+</div>
+<!-- 进度 -->
+<div class="container gry_bg" style="position:relative">
+    <div class="grey_line"></div>
+    <div class="flex_col_around" style="position:relative;z-index:10">
+        <div class="step_box active">
+            <div class="step_pic"></div>
+            <p class="step_p">第一步</p>
+        </div>
+        <div class="step_box">
+            <div class="step_pic"></div>
+            <p class="step_p">第二步</p>
+        </div>
+        <div class="step_box">
+            <div class="step_pic"></div>
+            <p class="step_p">第三步</p>
+        </div>
+        <div class="step_box">
+            <div class="step_pic"></div>
+            <p class="step_p">第四步</p>
+        </div>            
+    </div>
+</div>
+
+<div class="container cell_box">
+    <div class="cell_title">身份证正面照</div>
+    <div class="col-xs-5 col-md-5 pic_cell">
+        <div class="cell_p">例子:</div>
+        <img src="./img/idcard_back.png" class="cell_lizi">
+    </div>
+    <div class="col-xs-5 col-md-5 pic_cell col-xs-offset-2 col-md-offset-2">
+         <div class="cell_p">点击上传图片</div>
+         <img src="./img/idcard_back.png" class="cell_lizi">
+    </div>
+</div>
+
+<div class="container cell_box">
+    <div class="cell_title">身份证正面照</div>
+    <div class="col-xs-6 col-md-3">
+        <a href="#" class="thumbnail">
+            <img src="./img/idcard_back.png">
+        </a>
+    </div>
+    <div class="col-xs-6 col-md-3">
+        <a href="#" class="thumbnail">
+            <img src="./img/idcard_back.png">
+        </a>
+    </div>
+</div>
+
+<!--dom结构部分-->
+<div id="uploader-demo">
+    <!--用来存放item-->
+    <div id="fileList" class="uploader-list"></div>
+    <div id="filePicker">选择图片</div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/webuploader.js"></script>
+<script>
+
+//console.log(WebUploader)
+var uploader = WebUploader.create({
+    //验证单个文件大小是否超出限制, 超出则不允许加入队列。(5M)
+    fileSingleSizeLimit: 5242880,
+    //文件上传请求的参数表，每次发送都会发送此对象中的参数
+    formData: {},
+    //验证文件总数量, 超出则不允许加入队列
+    fileNumLimit: 1,
+    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+    resize: true,
+    // 选完文件后，是否自动上传。
+    auto: true,
+    // swf文件路径
+    swf: 'http://123456.m.zhuquanquan.com/Revision/webuploader-0.1.5/Uploader.swf',
+    // 文件接收服务端。
+    server: 'https://zqqapp.zhuquanquan.com/Ajax/AddWeChatMenuItem_Image.ashx',
+    // 选择文件的按钮。可选。
+    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+    pick: '#addpic_btn',
+    // 只允许选择图片文件。
+    accept: {
+        title: 'Images',
+        extensions: 'gif,jpg,jpeg,bmp,png',
+        mimeTypes: 'image/*'
+    },
+});
+// 当有文件添加进来的时候
+uploader.on('fileQueued', function (file) {
+	$(".dotted_line.imgme").hide();
+	$(".show_uppic_box")[0].style.display="flex";
+	$("#picss").show();
+});
+</script>
+</body>
+</html>

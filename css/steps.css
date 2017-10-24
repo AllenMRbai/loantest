@@ -1,0 +1,46 @@
+ /* 顶部标题 */
+ .top_left_title{
+    padding: 10px 0;
+   }
+  .top_left_title img{
+      width: 100%;
+  }
+  /* 进度条 */
+  .gry_bg{
+      background-color: #f4f4f4;
+      padding-top:10px;
+  }
+  .step_box{
+      width: 20vw;
+  }
+  .step_box .step_pic{
+    width: 8vw;
+    height: 8vw;
+    max-height: 60px;
+    max-width: 60px;
+    margin:0 auto;
+    background-image: url('../img/common_round_grey.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  .step_box.active .step_pic{
+    background-image: url('../img/common_round_blue.png');
+  }
+  .step_box .step_p{
+    text-align: center;
+    font-size: 13px;
+    color: #cacacc;
+    margin-top: 6px;
+  }
+  .step_box.active .step_p{
+    color:#0084ff;
+  }
+  .grey_line{
+      width: 90%;
+      height: 2px;
+      background-color: #cacacc;
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translate3d(-50%,0,0);
+  }

@@ -1,0 +1,53 @@
+body{
+    background-color: #131232;
+  }
+  /* 头部大标题 */
+  .title{
+    padding-top: 20px;
+  }
+  .title img{
+    width: 100%;
+  }
+  /* 宣传面板 */
+  .jumbotron{
+    background-color: #101131;
+  }
+  .jumbotron .propaganda_title{
+    text-align: center;
+    color: #c8c8d8;
+  }
+  /* 表单 */
+  .subform .input-group{
+      margin-bottom: 18px
+  }
+  .subform .sub_btn{
+      height: 30px;
+      border-radius: 15px;
+      color:#fff;
+      background-color: #121232;
+      border:none;
+      margin-bottom: 8px;
+  }
+  .subform .check_box{
+      padding-right: 4px
+  }
+  .subform .clause{
+      color:#7e7e7e;
+      font-size: 12px;
+  }
+  /* 底部公司信息 */
+  .bottom_p{
+      text-align: center;
+      color:#c4c4cc;
+      font-size: 12px;
+  }
+
+
+  /* 提交验证码的按钮 */
+.input-group-btn>.btn.my_btn{
+    border:1px solid #ccc;
+    border-left: none;
+}
+.input-group-btn>.btn.cantclick{
+    color: #ac5883;
+}
