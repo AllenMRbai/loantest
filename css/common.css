@@ -114,4 +114,32 @@
 	top:0;
 	right: 0;
 	z-index: 2016;
-  }
+	}
+
+/*注册界面底部悬浮下一步按钮*/
+.white_spcae{
+    height: 80px;
+}
+.bottom_submit{
+    width: 100%;
+    width: 100vw;
+    height: 50px;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    line-height: 50px;
+    background-color: #0084ff;
+    position: fixed;
+    left: 0;
+		bottom:0;
+		z-index: 200
+}
+
+/* 提交验证码的按钮 */
+.input-group-btn>.btn.my_btn{
+    border:1px solid #ccc;
+    border-left: none;
+}
+.input-group-btn>.btn.cantclick{
+    color: #ac5883;
+}

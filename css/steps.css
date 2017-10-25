@@ -44,3 +44,45 @@
       left: 50%;
       transform: translate3d(-50%,0,0);
   }
+
+  /* input下面的验证提示信息 */
+  .v-tips{
+    font-size: 14px;
+    line-height: 28px;
+    padding-left: 4px;
+  } 
+  .v-tips.v_defeated{
+      color: #f11616;
+  }
+  .v-tips.v_success{
+      color:#20bb74;
+  }
+
+  /* 认证面板 */
+  .pannel_list{
+    height: 54px;
+    line-height: 54px;
+    box-sizing: border-box;
+    padding:0 10px;
+}
+.pannel_list .title{
+    font-size: 15px;
+    color: #424242;
+}
+.pannel_list .sign{
+    font-size: 13px;
+    color: #b3b3b3;
+}
+.pannel_list .sign.active{
+    font-size: 14px;
+    color: #08c193;
+
+}
+
+/* 我的下拉框样式 */
+.my_select{
+    outline:none;
+    border:none;
+    width: 100%;
+    background-color: #fff;
+}

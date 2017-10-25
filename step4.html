@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第四步</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/steps.css" rel="stylesheet">
+  <style>
+    
+  </style>
+</head>
+<!-- 头部 -->
+<div class="container" style="padding:0 10px;">
+    <div class="col-xs-4 col-md-3 top_left_title"><img src="./img/common_title_black.png"></div>
+</div>
+<!-- 进度 -->
+<div class="container gry_bg" style="position:relative">
+    <div class="grey_line"></div>
+    <div class="flex_col_around" style="position:relative;z-index:10">
+        <div class="step_box active">
+            <div class="step_pic"></div>
+            <p class="step_p">第一步</p>
+        </div>
+        <div class="step_box active">
+            <div class="step_pic"></div>
+            <p class="step_p">第二步</p>
+        </div>
+        <div class="step_box active">
+            <div class="step_pic"></div>
+            <p class="step_p">第三步</p>
+        </div>
+        <div class="step_box active">
+            <div class="step_pic"></div>
+            <p class="step_p">第四步</p>
+        </div>            
+    </div>
+</div>
+
+
+<div class="container" style='height:30px;'></div>
+<div class="container">
+    <div class="form-group my_list" id='wechat'>
+        <label>微信账号</label>
+        <input type="email" class="form-control" placeholder="微信号码">
+    </div>
+    <div class="form-group my_list" id='relate_name'>
+        <label>紧急联系人姓名</label>
+        <input type="email" class="form-control" placeholder="紧急联系人姓名">
+    </div>
+    <div class="form-group my_list" id='relationship'>
+        <label>紧急联系人关系</label>
+        <div class="form-control">
+            <select id='selec' class="my_select">
+                <option value ="父亲">父亲</option>
+                <option value ="母亲">母亲</option>
+                <option value="兄弟">兄弟</option>
+                <option value="姐妹">姐妹</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group my_list" id='relate_phone'>
+        <label>紧急联系人号码</label>
+        <input type="email" class="form-control" placeholder="紧急联系人号码" onchange='validatePh()' maxlength="11" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this)">
+        <div class="v_defeated v-tips hidden">姓名填写有误</div>
+        <div class="v_success v-tips hidden">正确</div>
+    </div>
+</div>
+
+<!-- 二选一认证（必填） -->
+<div class="container" id='require' style='margin-top:20px;'>
+    <div class="panel panel-default">
+        <!-- <div class="panel-heading">二选一认证（必填）</div> -->
+        <div class="panel-body" style="padding:0;">
+            <div class="col-xs-12 col-md-12" style="padding:0;">
+                <div class="pannel_list line_bottom flex_col_betwen">
+                    <div class="title">手机运营商认证</div>
+                    <div class="sign active" id='authentic'>
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
+                        <span>已认证</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 空白与底部悬浮按钮 -->
+<div class="white_spcae"></div>
+<div class="bottom_submit" id='gonext'>立即领钱</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+//提交表单
+function submitForm(){
+    var form=getForm();
+    if(form===false){
+        return;
+    }
+
+    kenPopup.loadingShow({tips:'验证中...'})//显示加载动画
+
+	$.ajax({
+        type: "get",
+        url: "",
+        data: {wechat:form[0],name:form[1],relation:form[2],phone:form[3],step:4},//分别为微信账号 紧急联系人姓名 紧急联系人关系 紧急联系人号码
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(true){//如果验证成功跳到跳到下一步 这里的条件改下
+				location.href=''
+			}else{//如果验证失败
+				kenPopup.alert({tips:'验证失败'})
+			}
+				
+        }
+    });
+}
+$('#gonext').click(submitForm)
+// 获得表单
+function getForm(){
+    var phoneIsTrue=validatePh();
+    if(!phoneIsTrue){
+        kenPopup.alert({tips:'紧急联系人手机号码填写错误'})
+        return false;
+    }
+    var wechat=$('#wechat').find('input').val().trim()
+    var relate_name=$('#relate_name').find('input').val().trim()
+    var relationship=$('#relationship').find('select').val()
+    var relate_phone=$('#relate_phone').find('input').val().trim()
+
+    var vals=[wechat,relate_name,relationship,relate_phone]
+    var cn=['微信账号','紧急联系人姓名','紧急联系人关系','紧急联系人号码',]
+    var tips=[]
+    for(var i=0;i<vals.length;i++){
+        if(vals[i].length===0){
+            tips.push(cn[i])
+        }
+    }
+    if(cn.length>0){
+        var str=''
+        for(var o=0;o<cn.length;o++){
+            str+=" "+cn[o];
+        }
+        kenPopup.alert({tips:str+'不能为空'})
+        return false;
+    }
+    if(!$('authentic').hasClass('active')){
+        kenPopup.alert({tips:str+'您还未进行手机运营商认证'})
+        return false;
+    }
+    
+    return vals;
+}
+
+//手机号号验证
+function validatePh(){
+    //手机号正则表达式
+    var preg=/^1[0-9]{10}$/
+
+    var val=$('#relate_phone').find('input').val()
+    if(!(val.length===11)){
+        vErr('#relate_phone','手机长度不正确')
+        return false;
+    }else{
+        if(preg.test(val)){
+            vSuc('#relate_phone')
+            return true;
+        }else{
+            vErr('#relate_phone','手机格式不正确')
+            return false;
+        }
+    }   
+}
+
+//提示错误 tar 例子'#name'
+function vErr(tar,tips){
+    var tip=tips || '填写错误'
+    $(tar).find('.v_defeated').text(tip).removeClass('hidden')
+    $(tar).find('.v_success').addClass('hidden')
+}
+//提示正确 tar 例子'#name'
+function vSuc(tar,tips){
+    var tip=tips || '填写正确'
+    $(tar).find('.v_success').text(tip).removeClass('hidden')
+    $(tar).find('.v_defeated').addClass('hidden')
+}
+
+</script>
+</body>
+</html>
