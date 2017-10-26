@@ -92,13 +92,55 @@ $('#phone_auth').click(function(){//手机运营商认证
     if(phone_auth){
         return;
     }
-    location.href=''
+    var token=getToken();
+    if(!token){
+        return;
+    }
+
+    kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetOperatorUrl",
+        data: {token:token},
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(data.result){
+                
+               location.href=data.data;
+                
+			}else{
+				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+			}			
+        }
+    });
 })
 $('#zhima_auth').click(function(){//芝麻人脸识别认证
     if(zhima_auth){
         return;
     }
-    location.href=''
+    var token=getToken();
+    if(!token){
+        return;
+    }
+
+    kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetCertPhotoFaceUrl",
+        data: {token:token},
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(data.result){
+                
+               location.href=data.data;
+                
+			}else{
+				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+			}			
+        }
+    });
 })
 //从token获得数据渲染到页面
 function renderPage(model){

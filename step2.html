@@ -143,8 +143,8 @@ function submitForm(){
     try{
         $.ajax({
             type: "get",
-            url: "",
-            data: {token:token,truename:form[0],idCard:form[1],bankReserveMobile:form[2],weChatNum:form[3],wechat:form[4],urgentContact:urgentContact},//'姓名','身份证号码','银行卡号','银行卡绑定号码','微信账号','紧急联系人姓名','紧急联系人关系','紧急联系人号码'
+            url: "http://api.zhuquanquan.com/User/OperationTwo",
+            data: {token:token,truename:form[0],idCard:form[1],bankCard:form[2],bankReserveMobile:form[3],weChatNum:form[4],urgentContact:urgentContact},//'姓名','身份证号码','银行卡号','银行卡绑定号码','微信账号','紧急联系人姓名','紧急联系人关系','紧急联系人号码'
             success: function (data) {
                 kenPopup.loadingHide()//隐藏加载动画
                 if(data.result){//如果验证成功跳到跳到下一步 这里的条件改下

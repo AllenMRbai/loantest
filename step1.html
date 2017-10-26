@@ -215,7 +215,7 @@ function submitForm(){
     try{
         $.ajax({
             type: "get",
-            url: "http://api.zhuquanquan.com/User/SendCode",
+            url: "http://api.zhuquanquan.com/User/OperationOne",
             data: {token:token,holdIdentityCard:pic1,idCardFront:pic2,idCardOpposite:pic3},
             success: function (data) {
                 kenPopup.loadingHide()//隐藏加载动画

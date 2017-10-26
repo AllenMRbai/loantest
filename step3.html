@@ -82,13 +82,58 @@ $('#zhima').click(function(){//芝麻认证的页面跳转
     if(hasAuthenticed){
         return;
     }
-    location.href=''
+
+    var token=getToken();
+    if(!token){
+        return;
+    }
+
+    kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetZmopUrl",
+        data: {token:token},
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(data.result){
+                
+               location.href=data.data;
+                
+			}else{
+				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+			}			
+        }
+    });
 })
-$('#zhima').click(function(){//京东认证的页面跳转
+$('#jdong').click(function(){//京东认证的页面跳转
     if(hasAuthenticed){
         return;
     }
-    location.href=''
+
+    var token=getToken();
+    if(!token){
+        return;
+    }
+    
+    kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetJingdongUrl",
+        data: {token:token},
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(data.result){
+                
+               location.href=data.data;
+                
+			}else{
+				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+			}			
+        }
+    });
+
 })
 //从token获得数据渲染到页面
 function renderPage(model){
