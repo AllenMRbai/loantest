@@ -70,7 +70,7 @@
 
 <!-- 空白与底部悬浮按钮 -->
 <div class="white_spcae"></div>
-<div class="bottom_submit" id='gonext'>下一步</div>
+<div class="bottom_submit" id='gonext' onclick='submitForm()'>下一步</div>
 
 <script src="js/jquery.min.js"></script>
 <!-- <script src="js/bootstrap.min.js"></script> -->
@@ -144,12 +144,12 @@ function renderPage(model){
     // var htmlDefault='<span>未认证</span>'
     if(zhima==1){
         hasAuthenticed=true;
-        $('#zhima').find(sign).html(htmlActive).addClass('active')
+        $('#zhima').find('.sign').html(htmlActive).addClass('active')
         return;
     }
     if(jd==1){
         hasAuthenticed=true;
-        $('#jdong').find(sign).html(htmlActive).addClass('active')
+        $('#jdong').find('.sign').html(htmlActive).addClass('active')
         return
     }
 }
@@ -179,6 +179,7 @@ function getModel(){
     });
 
 }
+getModel()
 
 //提交表单
 function submitForm(){

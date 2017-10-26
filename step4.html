@@ -78,7 +78,7 @@
     </div>
 <!-- 空白与底部悬浮按钮 -->
 <div class="white_spcae"></div>
-<div class="bottom_submit" id='gonext'>立即领钱</div>
+<div class="bottom_submit" id='gonext' onclick='submitForm()'>立即领钱</div>
 
 <script src="js/jquery.min.js"></script>
 <!-- <script src="js/bootstrap.min.js"></script> -->
@@ -184,6 +184,7 @@ function getModel(){
     });
 
 }
+getModel()
 
 //提交表单
 function submitForm(){
@@ -201,7 +202,7 @@ function submitForm(){
     kenPopup.loadingShow({tips:'加载中'})//显示加载动画
     $.ajax({
         type: "get",
-        url: "http://api.zhuquanquan.com/User/OperationThree",
+        url: "http://api.zhuquanquan.com/User/OperationFour",
         data: {token:token},//分别为手机号 验证码
         success: function (data) {
 			kenPopup.loadingHide()//隐藏加载动画
