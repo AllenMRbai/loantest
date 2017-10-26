@@ -78,6 +78,26 @@
     width: 100%;
     height: 100%;
 }
+/* 添加图片按钮的样式 */
+.thumb_box .status{
+    width: 100%;
+    padding:2px 0;
+    text-align: center;
+    color:#fff;
+    background-color: rgba(0,0,0,.5);
+    position: absolute;
+    left: 0;
+    bottom:0;
+    font-size: 12px;
+    font-weight:normal;
+    z-index: 92;
+}
+.thumb_box .status.green{
+    color:#19f3b8;
+}
+.thumb_box .status.red{
+    color:#ff0e0e;
+}
   </style>
 </head>
 <!-- 头部 -->
@@ -109,15 +129,16 @@
 
 
 <div class="container cell_box">
-    <div class="cell_title">身份证正面照</div>
+    <div class="cell_title">手持身份证照片</div>
     <div class="col-xs-5 col-md-5 pic_cell">
         <div class="cell_p">例子:</div>
-        <img src="./img/idcard_back.png" class="cell_lizi">
+        <img src="./img/idcard_man.png" class="cell_lizi">
     </div>
     <div class="col-xs-5 col-md-5 pic_cell col-xs-offset-2 col-md-offset-2">
          <div class="cell_p">点击上传图片</div>
          <label class="thumb_box">
-                <div id="pick1" class="pick_btn">132</div>
+                <input type="file" id="pick1" class="pick_btn" onchange="uploadFile('#pick1')" data-url='false'>
+                <div class="status green hidden">上传中</div>
                 <div class="show_pic hidden"><img src=""></div>
                 <div class="add_pic"><img src="./img/common_add.png"></div>
          </label>
@@ -125,118 +146,153 @@
 </div>
 
 <div class="container cell_box">
-        <div class="cell_title">身份证正面照</div>
-        <div class="col-xs-5 col-md-5 pic_cell">
-            <div class="cell_p">例子:</div>
-            <img src="./img/idcard_back.png" class="cell_lizi">
-        </div>
-        <div class="col-xs-5 col-md-5 pic_cell col-xs-offset-2 col-md-offset-2">
-             <div class="cell_p">点击上传图片</div>
-             <label class="thumb_box">
-                    <div id="pick1" class="pick_btn">132</div>
-                    <div class="show_pic hidden"><img src=""></div>
-                    <div class="add_pic"><img src="./img/common_add.png"></div>
-             </label>
-        </div>
+    <div class="cell_title">身份证正面</div>
+    <div class="col-xs-5 col-md-5 pic_cell">
+        <div class="cell_p">例子:</div>
+        <img src="./img/idcard_back.png" class="cell_lizi">
     </div>
+    <div class="col-xs-5 col-md-5 pic_cell col-xs-offset-2 col-md-offset-2">
+            <div class="cell_p">点击上传图片</div>
+            <label class="thumb_box">
+                <input type="file" id="pick2" class="pick_btn" onchange="uploadFile('#pick2')" data-url='false'>
+                <div class="status green hidden">上传中</div>
+                <div class="show_pic hidden"><img src=""></div>
+                <div class="add_pic"><img src="./img/common_add.png"></div>
+            </label>
+    </div>
+</div>
 
-    <div class="container cell_box">
-            <div class="cell_title">身份证正面照</div>
-            <div class="col-xs-5 col-md-5 pic_cell">
-                <div class="cell_p">例子:</div>
-                <img src="./img/idcard_back.png" class="cell_lizi">
-            </div>
-            <div class="col-xs-5 col-md-5 pic_cell col-xs-offset-2 col-md-offset-2">
-                 <div class="cell_p">点击上传图片</div>
-                 <label class="thumb_box">
-                        <div id="pick1" class="pick_btn">132</div>
-                        <div class="show_pic hidden"><img src=""></div>
-                        <div class="add_pic"><img src="./img/common_add.png"></div>
-                 </label>
-            </div>
-        </div>
+<div class="container cell_box">
+    <div class="cell_title">身份证反面</div>
+    <div class="col-xs-5 col-md-5 pic_cell">
+        <div class="cell_p">例子:</div>
+        <img src="./img/idcard_front.png" class="cell_lizi">
+    </div>
+    <div class="col-xs-5 col-md-5 pic_cell col-xs-offset-2 col-md-offset-2">
+            <div class="cell_p">点击上传图片</div>
+            <label class="thumb_box">
+                <input type="file" id="pick3" class="pick_btn" onchange="uploadFile('#pick3')" data-url='false'>
+                <div class="status green hidden">上传中</div>
+                <div class="show_pic hidden"><img src=""></div>
+                <div class="add_pic"><img src="./img/common_add.png"></div>
+            </label>
+    </div>
+</div>
+
+
 
 <!-- 空白与底部悬浮按钮 -->
 <div class="white_spcae"></div>
-<div class="bottom_submit">下一步</div>
+<div class="bottom_submit" onclick='submitForm()'>下一步</div>
 
 <script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<!-- <script src="js/bootstrap.min.js"></script> -->
 <script src="js/common.js"></script>
 <script src="js/webuploader.js"></script>
 <script>
 
+//提交表单
+function submitForm(){
+    var token=getToken();
+    if(!token){
+        return;
+    }
 
-//pick按钮的 id string 例子 #pick
-function newUpLoader(pick){
+    var pic1=getPicURL('#pick1')  
+    if(!pic1){
+        return
+    }
+    var pic2=getPicURL('#pick2')
+    if(!pic2){
+        return
+    }
+    var pic3=getPicURL('#pick3')
+    if(!pic3){
+        return
+    }
 
-    var uploader = WebUploader.create({
-        //验证单个文件大小是否超出限制, 超出则不允许加入队列。(5M)
-        fileSingleSizeLimit: 5242880,
-        //文件上传请求的参数表，每次发送都会发送此对象中的参数
-        formData: {},
-        //验证文件总数量, 超出则不允许加入队列
-        fileNumLimit: 1,
-        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-        resize: true,
-        // 选完文件后，是否自动上传。
-        auto: true,
-        // swf文件路径
-        // swf: '/Revision/webuploader-0.1.5/Uploader.swf',
-        // 文件接收服务端。
-        server: 'http://api.lingkuaiyou.com/User/UploadImage',
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: pick,
-        // 只允许选择图片文件。
-        accept: {
-            title: 'Images',
-            extensions: 'gif,jpg,jpeg,bmp,png',
-            mimeTypes: 'image/*'
-        },
-    });
-    // 当有文件添加进来的时候
-    uploader.on('fileQueued', function (file) {
-        
-        console.log('执行了')
-        uploader.options.formData.file=file.source.source
-        console.log(file.source.source)
-        console.log(uploader.options.formData)
-        // 创建缩略图    
-        uploader.makeThumb( file, function( error, src ) {    
-            if ( error ) {    
-                console.log('缩略图创建失败')   
-                return;    
-            }    
-            console.log('做了缩略图')
-            $(pick).parent('.thumb_box').find('.show_pic').removeClass('hidden').find('img').attr('src',src)
-                
-        }, 100, 100 ); //100x100为缩略图尺寸    
-    });
-    uploader.on('beforeFileQueued',function(file){
-        var fls=uploader.getFiles();
-        if(fls.length>0){
-            var rf=fls[0];
-            console.log('这里触发重新上传图片',rf)
-            uploader.removeFile(rf,true);
-        }
-        return true;
-    })
-    //uploader.on( 'uploadBeforeSend', function( block, data ) {  
-    //     // block为分块数据。  
-    //     console.log('在文件发送前执行了')
-    //     // file为分块对应的file对象。  
-    //     var file = block.file;
-    //     console.log(block)
-    //     console.log(data)
-        
-    //     // 修改data可以控制发送哪些携带数据。  
-    //     //data.file = file;  
-    //}); 
-
-    return uploader
+    kenPopup.loadingShow({tips:'验证中...'})//显示加载动画
+    try{
+        $.ajax({
+            type: "get",
+            url: "http://api.zhuquanquan.com/User/SendCode",
+            data: {token:token,holdIdentityCard:pic1,idCardFront:pic2,idCardOpposite:pic3},
+            success: function (data) {
+                kenPopup.loadingHide()//隐藏加载动画
+                if(data.result){
+                    location.href='step2.html'
+                }else{
+                    kenPopup.alert({tips:data.message})
+                }
+            }
+        });
+    }catch(err){
+        throw(err)
+    }
 }
-var uploader=newUpLoader('#pick1')
+//获得token
+function getToken(){
+    var token=sessionStorage.getItem('token');
+    if(!token){
+        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
+            location.href='apply.html'
+        }})
+        return false;
+    }
+    return encodeURIComponent(token);
+
+}
+//获取图片地址 targ 例 '#pick1'
+function getPicURL(targ){
+    var url=$(targ).attr('data-url')
+    if(url==='false'){
+        var picName=$(targ).parent('.cell_box').find('.cell_title').text()
+        kenPopup.alert({tips:'请上传 '+picName})
+        return false;
+    }
+    return encodeURIComponent(url);
+}
+//上传图片 targ '#pick1'
+function uploadFile(targ){
+    //console.log($(targ).get(0).files[0])
+    var file=$(targ).get(0).files[0];
+    var fd=new FormData();
+    fd.append('file',file)
+
+    //获取缩略图
+    var reader=new FileReader()
+    reader.onload=function(ev){
+        var data = ev.target.result;
+        
+        $(targ).parent('.thumb_box').find('.show_pic').removeClass('hidden').find('img').attr('src',data)
+        $(targ).parent('.thumb_box').find('.status').text('上传中').removeClass('hidden').removeClass('green').removeClass('red')
+        $(targ).attr('data-url','false')
+    }
+    reader.readAsDataURL(file)
+    
+    //上传图片
+    $.ajax({
+        url:"http://api.zhuquanquan.com/User/UploadImage",
+        type:"POST",
+
+        dataType:"json",
+        async:true,
+        cache:false,
+
+        contentType:false,
+        processData:false,
+        data:fd,
+        success:function(data){
+            if(data.result){
+                $(targ).parent('.thumb_box').find('.status').text('完成').removeClass('hidden').addClass('green')
+                $(targ).attr('data-url',data.data)
+            }else{
+                $(targ).parent('.thumb_box').find('.status').text('上传失败').removeClass('hidden').addClass('red')
+                $(targ).attr('data-url','false')
+            }
+        },
+    })
+}
 </script>
 </body>
 </html>

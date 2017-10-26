@@ -62,8 +62,8 @@ function requestValidationCode(){
 	countDown(60)//开始倒计时
 	$.ajax({
         type: "get",
-        url: "",
-        data: {phone:phone},
+        url: "http://api.zhuquanquan.com/User/SendCode",
+        data: {mobile:phone},
         success: function (data) {
 
         }
@@ -79,17 +79,35 @@ function submitForm(){
 
 	$.ajax({
         type: "get",
-        url: "",
-        data: {phone:form[0],verify:form[1]},//分别为手机号 验证码
+        url: "http://api.zhuquanquan.com/User/Register",
+        data: {mobile:form[0],code:form[1]},//分别为手机号 验证码
         success: function (data) {
 			kenPopup.loadingHide()//隐藏加载动画
-			
-			if(true){//如果验证成功跳到跳到下一步 这里的条件改下
-				location.href=''
+			//console.log(data)
+			if(data.result){//如果验证成功跳到跳到下一步 这里的条件改下
+				sessionStorage.setItem('token',data.message)
+				var step=data.data.TheFew;
+				switch(step)
+				{
+					case 1:
+						location.href='step1.html'
+						break;
+					case 2:
+						location.href='step2.html'
+						break;
+					case 3:
+						location.href='step3.html'
+						break;
+					case 4:
+						location.href='step4.html'
+						break;
+					default:
+						location.href='step1.html'
+				}
+				//location.href='step1.html'
 			}else{//如果验证失败
-				kenPopup.alert({tips:'验证失败'})
-			}
-				
+				kenPopup.alert({tips:data.message})
+			}			
         }
     });
 }

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>个人中心</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/steps.css" rel="stylesheet">
+  <style>
+    .me .status{
+        font-size: 13px;
+        color:#808080;
+    }
+    .me .status.pass{
+        font-size: 13px;
+        color:#08c193;
+    }
+    .me .sculp{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        border:1px solid #b3b3b3;
+    }
+    .me .sculp img{
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .me .district{
+        overflow: hidden;
+        white-space:nowrap;
+        text-overflow: ellipsis;
+        width: 200px;
+        margin-left: 16px;
+    }
+  </style>
+</head>
+<!-- 头部 -->
+<div class="container" style="padding:0 10px;">
+    <div class="col-xs-4 col-md-3 top_left_title"><img src="./img/common_title_black.png"></div>
+</div>
+<div class="container line_bottom"></div>
+
+<div class="container me" style='margin-top:20px;'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="flex_col_betwen">
+                <div>个人信息</div>
+                <div class="status">审核中</div>
+            </div>
+        </div>
+        <div class="panel-body" style="padding:0;">
+
+            <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
+                <div class="pannel_list line_bottom flex_col_start" style="height:90px;">
+                    <div class="sculp"><img src="./img/someonehead.png"></div>
+                    <div class="title district" id='usr_name'>账户名</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">二选一认证</div>
+        <div class="panel-body" style="padding:0;">
+
+            <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
+                <div class="pannel_list line_bottom flex_col_betwen">
+                    <div class="title" id='oneoftwo'>芝麻认证</div>
+                    <div class="sign active">
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
+                        <span>已认证</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 认证（必填） -->
+<div class="container" id='phone_auth'>
+    <div class="panel panel-default">
+        <!-- <div class="panel-heading">二选一认证（必填）</div> -->
+        <div class="panel-body" style="padding:0;">
+            <div class="col-xs-12 col-md-12" style="padding:0;">
+                <div class="pannel_list line_bottom flex_col_betwen">
+                    <div class="title">手机运营商认证</div>
+                    <div class="sign active" id='authentic'>
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
+                            <span>已认证</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<!-- 认证（必填） -->
+<div class="container" id='zhima_auth'>
+    <div class="panel panel-default">
+        <!-- <div class="panel-heading">二选一认证（必填）</div> -->
+        <div class="panel-body" style="padding:0;">
+            <div class="col-xs-12 col-md-12" style="padding:0;">
+                <div class="pannel_list line_bottom flex_col_betwen">
+                    <div class="title">芝麻人脸识别与身份证认证</div>
+                    <div class="sign active" id='authentic'>
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
+                            <span>已认证</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<!-- <script src="js/bootstrap.min.js"></script> -->
+<script src="js/common.js"></script>
+<script>
+
+//从token获得数据渲染到页面
+function renderPage(model){
+    $('#usr_name').text(model.Mobile)
+    var zhima=model.IsSesameCert;
+    var jd=model.IsJDCert;
+    
+    if(zhima==1){
+        $('#oneoftwo').text('芝麻认证')
+        return;
+    }
+    if(jd==1){
+        $('#oneoftwo').text('京东认证')
+        return;
+    }
+}
+//获得model
+function getModel(){
+    var token=getToken();
+    if(!token){
+        return;
+    }
+
+    kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetUserInfo",
+        data: {token:token},//分别为手机号 验证码
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(data.result){//成功获得用户信息，开始将数据渲染到页面
+                
+                renderPage(data.data)//渲染函数
+                
+			}else{
+				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+			}			
+        }
+    });
+
+}
+
+
+//获得token
+function getToken(){
+    var token=sessionStorage.getItem('token');
+    if(!token){
+        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
+            location.href='apply.html'
+        }})
+        return false;
+    }
+    return encodeURIComponent(token);
+}
+
+</script>
+</body>
+</html>

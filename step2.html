@@ -56,7 +56,7 @@
 
     <div class="form-group my_list" id='idcard'>
         <label>身份证号码</label>
-        <input type="email" class="form-control" placeholder="身份证号码" onchange="validateID()" maxlength="18" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9xX]+/,'');}).call(this)" >
+        <input type="email" class="form-control" placeholder="身份证号码"  maxlength="18" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9xX]+/,'');}).call(this);validateID()" >
         <div class="v_defeated v-tips hidden">姓名填写有误</div>
         <div class="v_success v-tips hidden">正确</div>
     </div>
@@ -67,8 +67,10 @@
     </div>
 
     <div class="form-group my_list" id='phone'>
-        <label>银行卡绑定号码</label>
-        <input type="email" class="form-control" placeholder="银行卡绑定的手机号码" onchange='validatePh("phone")' maxlength="11" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this)">
+        <label>银行预留手机号</label>
+        <input type="email" class="form-control" placeholder="银行卡绑定的手机号码"  maxlength="11" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this);validatePh('#phone')">
+        <div class="v_defeated v-tips hidden">姓名填写有误</div>
+        <div class="v_success v-tips hidden">正确</div>
     </div>
 
     <div class="form-group my_list" id='wechat'>
@@ -95,7 +97,7 @@
     
     <div class="form-group my_list" id='relate_phone'>
         <label>紧急联系人号码</label>
-        <input type="email" class="form-control" placeholder="紧急联系人号码" onchange='validatePh("#relate_phone")' maxlength="11" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this)">
+        <input type="email" class="form-control" placeholder="紧急联系人号码"  maxlength="11" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this);validatePh('#relate_phone')">
         <div class="v_defeated v-tips hidden">姓名填写有误</div>
         <div class="v_success v-tips hidden">正确</div>
     </div>
@@ -115,10 +117,10 @@
 
 <!-- 空白与底部悬浮按钮 -->
 <div class="white_spcae"></div>
-<div class="bottom_submit" id='gonext' onclick='submitForm'>下一步</div>
+<div class="bottom_submit" id='gonext' onclick='submitForm()'>下一步</div>
 
 <script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<!-- <script src="js/bootstrap.min.js"></script> -->
 <script src="js/common.js"></script>
 <script>
 
@@ -126,56 +128,100 @@
 
 //提交表单
 function submitForm(){
+    var token=getToken();
+    if(!token){
+        return;
+    }
+
     var form=getForm();
     if(form===false){
         return;
     }
 
-    kenPopup.loadingShow({tips:'验证中...'})//显示加载动画
-
-	$.ajax({
-        type: "get",
-        url: "",
-        data: {name:form[0],IDNum:form[1],bank:form[2],phone:form[3],verify:form[4],step:2},//分别为姓名 身份证号码 银行卡号 手机号码 验证码
-        success: function (data) {
-			kenPopup.loadingHide()//隐藏加载动画
-			
-			if(true){//如果验证成功跳到跳到下一步 这里的条件改下
-				location.href=''
-			}else{//如果验证失败
-				kenPopup.alert({tips:'验证失败'})
-			}
-				
-        }
-    });
+    var urgentContact=formatUrgenContact(form[5],form[6],form[7])
+    kenPopup.loadingShow({tips:'提交中...'})//显示加载动画
+    try{
+        $.ajax({
+            type: "get",
+            url: "",
+            data: {token:token,truename:form[0],idCard:form[1],bankReserveMobile:form[2],weChatNum:form[3],wechat:form[4],urgentContact:urgentContact},//'姓名','身份证号码','银行卡号','银行卡绑定号码','微信账号','紧急联系人姓名','紧急联系人关系','紧急联系人号码'
+            success: function (data) {
+                kenPopup.loadingHide()//隐藏加载动画
+                if(data.result){//如果验证成功跳到跳到下一步 这里的条件改下
+                    location.href='step3.index'
+                }else{//如果验证失败
+                    kenPopup.alert({tips:'提交失败'})
+                }
+            }
+        });
+    }catch(err){
+        throw(err)
+    }
+    
+}
+//获得token
+function getToken(){
+    var token=sessionStorage.getItem('token');
+    if(!token){
+        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
+            location.href='apply.html'
+        }})
+        return false;
+    }
+    return encodeURIComponent(token);
+}
+//将紧急联系人 姓名 关系 手机号 格式化为小施需要的形式 例子 张三:父亲:18312345678
+function formatUrgenContact(t1,t2,t3){
+    var a=t1 || '无'
+    var b=t2 || '无'
+    var c=t3 || '无'
+    return a+':'+b+':'+c
 }
 //验证表单并获得表单 认证成功返回数组 或认证失败返回false
 //数组内变量依次为 名字 身份证号码 银行卡号 手机号码 验证码
 function getForm(){
-    var idIsTrue=validateID()//看身份证号码是否填写正确
+    var idIsTrue=validateID(),//看身份证号码是否填写正确
+        phone1=validatePh("#phone"),
+        phone2=validatePh("#relate_phone");
 
     if(!idIsTrue){
         kenPopup.alert({tips:'身份证号码填写有误'})
         return false;
     }
+    if(!phone1){
+        kenPopup.alert({tips:'银行预留手机号填写有误'})
+        return false;
+    }
+    if(!phone1){
+        kenPopup.alert({tips:'紧急联系人号码填写有误'})
+        return false;
+    }
+
     var name=$('#name').find('input').val().trim()
     var idcard=$('#idcard').find('input').val().trim()
     var bank=$('#bank').find('input').val().trim()
     var phone=$('#phone').find('input').val().trim()
-    var vali=$('#verify').val().trim()
+    var wechat=$('#wechat').find('input').val().trim()
+    var relate_name=$('#relate_name').find('input').val().trim()
+    var relationship=$('#relationship').find('select').val()
+    var relate_phone=$('#relate_phone').find('input').val().trim()
 
-    var vals=[name,idcard,bank,phone,vali]
-    var cn=['姓名','身份证号码','银行卡号','银行卡绑定号码','微信账号','紧急联系人姓名','紧急联系人关系','紧急联系人号码']
+    var vals=[name,idcard,bank,phone,wechat,relate_name,relationship,relate_phone]
+    var cn=['姓名','身份证号码','银行卡号','银行预留手机号','微信账号','紧急联系人姓名','紧急联系人关系','紧急联系人号码']
     var tips=[]
     for(var i=0;i<vals.length;i++){
         if(vals[i].length===0){
             tips.push(cn[i])
         }
     }
-    if(cn.length>0){
+    if(tips.length>0){
+        if(tips.length>2){
+            kenPopup.alert({tips:'请完整填写所有项目'})
+            return false
+        }
         var str=''
-        for(var o=0;o<cn.length;o++){
-            str+=" "+cn[o];
+        for(var o=0;o<tips.length;o++){
+            str+=" "+tips[o];
         }
         kenPopup.alert({tips:str+'不能为空'})
         return false
