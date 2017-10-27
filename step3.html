@@ -110,7 +110,6 @@ function goOwnStep(){
                         location.href='step2.html'
                         break;
                     case 3:
-                        location.href='step3.html'
                         break;
                     case 4:
                         location.href='step4.html'
@@ -196,7 +195,8 @@ function renderPage(model){
     var zhima=model.IsSesameCert;
     var jd=model.IsJDCert;
     
-    var htmlActive='<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span><span>已认证</span>'
+    //var htmlActive='<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span><span>已认证</span>'
+    var htmlActive='<span><img src="./img/common_ok.png" style="width:16px;height:16px;"></span>&nbsp;<span>已认证</span>'
     // var htmlDefault='<span>未认证</span>'
     if(zhima==1){
         hasAuZhima=true;

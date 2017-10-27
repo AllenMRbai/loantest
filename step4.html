@@ -111,7 +111,6 @@ function goOwnStep(){
                         location.href='step3.html'
                         break;
                     case 4:
-                        location.href='step4.html'
                         break;
                     case 5:
                         location.href='me.html'
@@ -168,7 +167,7 @@ $('#zhima_auth').click(function(){//芝麻人脸识别认证
 
     var typeOfweb=showWich()
     if(typeOfweb==='wechat'){
-        location.href='wechatZhima.html';
+        location.href='wechatZhima.html?token='+token;
     }else{
         kenPopup.loadingShow({tips:'加载中'})//显示加载动画
         $.ajax({
@@ -204,15 +203,16 @@ function renderPage(model){
     var phoneAuth=model.IsOperator;//手机运营商认证
     var zhimaAuth=model.IsSocial;//芝麻人脸识别认证
     
-    var htmlActive='<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span><span>已认证</span>'
+    //var htmlActive='<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span><span>已认证</span>'
+    var htmlActive='<span><img src="./img/common_ok.png" style="width:16px;height:16px;"></span>&nbsp;<span>已认证</span>'
     // var htmlDefault='<span>未认证</span>'
     if(phoneAuth==1){
         phone_auth=true;
-        $('#phone_auth').find(sign).html(htmlActive).addClass('active')
+        $('#phone_auth').find('.sign').html(htmlActive).addClass('active')
     }
     if(zhimaAuth==1){
         zhima_auth=true;
-        $('#zhima_auth').find(sign).html(htmlActive).addClass('active')
+        $('#zhima_auth').find('.sign').html(htmlActive).addClass('active')
     }
 }
 //获得model

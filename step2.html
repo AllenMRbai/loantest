@@ -146,7 +146,6 @@ function goOwnStep(){
                         location.href='step1.html'
                         break;
                     case 2:
-                        location.href='step2.html'
                         break;
                     case 3:
                         location.href='step3.html'
@@ -334,7 +333,7 @@ function validatePh(tar){
 
 //微信账号验证 例子my_list上面的id 例子'#relate_phone'
 function validateWechat(tar){
-    var preg=/^[a-zA-Z][^0-9a-zA-Z_-]{5,19}$/
+    var preg=/^[a-zA-Z][0-9a-zA-Z_-]{5,19}$/
 
     var val=$(tar).find('input').val().trim()
     if(!(val.length<=20 && val.length>=6)){

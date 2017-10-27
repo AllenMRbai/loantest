@@ -145,7 +145,6 @@ function goOwnStep(){
                         location.href='step4.html'
                         break;
                     case 5:
-                        location.href='me.html'
                         break;
                     default:
                         location.href='step1.html'
@@ -171,7 +170,8 @@ function renderCustomer(model){
     $('#auditor .wechat_acount').text(model.WeChatNum)
 }
 
-//获得 个人信息的model 和 审核人员的model
+//获得 个人信息的model 和 审核人员的mode
+getModel()
 function getModel(){
     var token=getToken();
     if(!token){

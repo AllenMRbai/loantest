@@ -41,8 +41,61 @@
 <script src="js/common.js"></script>
 <script>
 //该函数返回的数据为编码后的token,如果网页已过期返回的是false
-var token=getToken();
+function getUrlToken(){
+    var searchText=location.search;
+    var reg=/^\?token=(.+)$/
+    if(reg.test(searchText)){
+        return searchText.match(reg)[1];
+    }else{
+        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
+            location.href='apply.html'
+        }})
+        setTimeout(function(){
+            location.href=location.href='apply.html'
+        },3000)
+        return false;
+    }
+}
 
+//跳转到芝麻页面
+function goToZhima(){
+    var token=getUrlToken();
+    if(!token){
+        return;
+    }
+
+    var typeOfweb=showWich()
+    if(typeOfweb==='wechat'){
+        return;
+    }else{
+        kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+        $.ajax({
+            type: "get",
+            url: "http://api.zhuquanquan.com/User/GetCertPhotoFaceUrl",
+            data: {token:token},
+            success: function (data) {
+                kenPopup.loadingHide()//隐藏加载动画
+                if(data.result){
+                   location.href=data.data;
+                }else{
+                    kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+                }			
+            }
+        });
+    }
+
+}
+goToZhima()
+
+//判断是否是微信页面
+function showWich(){
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {//如果是微信网页
+        return 'wechat';
+    } else {//普通浏览器
+        return 'web';
+    }
+}
 </script>
 </body>
 </html>

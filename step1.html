@@ -208,7 +208,6 @@ function goOwnStep(){
                 switch(step)
                 {
                     case 1:
-                        location.href='step1.html'
                         break;
                     case 2:
                         location.href='step2.html'
@@ -242,14 +241,17 @@ function submitForm(){
 
     var pic1=getPicURL('#pick1')  
     if(!pic1){
+        kenPopup.alert({tips:'请上传手持身份证照'})
         return
     }
     var pic2=getPicURL('#pick2')
     if(!pic2){
+        kenPopup.alert({tips:'请上传身份证正面照'})
         return
     }
     var pic3=getPicURL('#pick3')
     if(!pic3){
+        kenPopup.alert({tips:'请上传身份证反面照'})
         return
     }
 
