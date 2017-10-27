@@ -84,6 +84,48 @@
 <!-- <script src="js/bootstrap.min.js"></script> -->
 <script src="js/common.js"></script>
 <script>
+//直接跳转到对应的页面
+function goOwnStep(){
+    var token=getToken();
+    if(token===false){
+        return
+    }
+
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetUserInfo",
+        data: {token:token},
+        success: function (data) {
+            kenPopup.loadingHide()//隐藏加载动画
+            if(data.result){
+                var step=data.data.TheFew;
+                switch(step)
+                {
+                    case 1:
+                        location.href='step1.html'
+                        break;
+                    case 2:
+                        location.href='step2.html'
+                        break;
+                    case 3:
+                        location.href='step3.html'
+                        break;
+                    case 4:
+                        location.href='step4.html'
+                        break;
+                    case 5:
+                        location.href='me.html'
+                        break;
+                    default:
+                        location.href='step1.html'
+                }
+            }else{
+                kenPopup.alert({tips:data.message})
+            }
+        }
+    });
+}
+goOwnStep();
 var phone_auth=false;
 var zhima_auth=false;
 
@@ -124,24 +166,39 @@ $('#zhima_auth').click(function(){//芝麻人脸识别认证
         return;
     }
 
-    kenPopup.loadingShow({tips:'加载中'})//显示加载动画
-    $.ajax({
-        type: "get",
-        url: "http://api.zhuquanquan.com/User/GetCertPhotoFaceUrl",
-        data: {token:token},
-        success: function (data) {
-			kenPopup.loadingHide()//隐藏加载动画
-			
-			if(data.result){
-                
-               location.href=data.data;
-                
-			}else{
-				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
-			}			
-        }
-    });
+    var typeOfweb=showWich()
+    if(typeOfweb==='wechat'){
+        location.href='wechatZhima.html';
+    }else{
+        kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+        $.ajax({
+            type: "get",
+            url: "http://api.zhuquanquan.com/User/GetCertPhotoFaceUrl",
+            data: {token:token},
+            success: function (data) {
+                kenPopup.loadingHide()//隐藏加载动画
+                if(data.result){
+                   location.href=data.data;
+                }else{
+                    kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+                }			
+            }
+        });
+    }
+
+    
 })
+
+//判断是否是微信页面
+function showWich(){
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {//如果是微信网页
+        return 'wechat';
+    } else {//普通浏览器
+        return 'web';
+    }
+}
+
 //从token获得数据渲染到页面
 function renderPage(model){
     var phoneAuth=model.IsOperator;//手机运营商认证
@@ -219,17 +276,6 @@ function submitForm(){
 
 }
 
-//获得token
-function getToken(){
-    var token=sessionStorage.getItem('token');
-    if(!token){
-        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
-            location.href='apply.html'
-        }})
-        return false;
-    }
-    return encodeURIComponent(token);
-}
 
 </script>
 </body>

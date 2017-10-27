@@ -57,7 +57,7 @@
     <div class="form-group my_list" id='idcard'>
         <label>身份证号码</label>
         <input type="email" class="form-control" placeholder="身份证号码"  maxlength="18" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9xX]+/,'');}).call(this);validateID()" >
-        <div class="v_defeated v-tips hidden">姓名填写有误</div>
+        <div class="v_defeated v-tips hidden">填写有误</div>
         <div class="v_success v-tips hidden">正确</div>
     </div>
 
@@ -69,13 +69,15 @@
     <div class="form-group my_list" id='phone'>
         <label>银行预留手机号</label>
         <input type="email" class="form-control" placeholder="银行卡绑定的手机号码"  maxlength="11" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this);validatePh('#phone')">
-        <div class="v_defeated v-tips hidden">姓名填写有误</div>
+        <div class="v_defeated v-tips hidden">填写有误</div>
         <div class="v_success v-tips hidden">正确</div>
     </div>
 
     <div class="form-group my_list" id='wechat'>
         <label>微信账号</label>
-        <input type="email" class="form-control" placeholder="微信号码">
+        <input type="email" class="form-control" placeholder="微信号码" maxlength="20" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9a-zA-Z_-]+/,'');}).call(this);validateWechat('#wechat')">
+        <div class="v_defeated v-tips hidden">填写有误</div>
+        <div class="v_success v-tips hidden">正确</div>
     </div>
 
     <div class="form-group my_list" id='relate_name'>
@@ -123,7 +125,48 @@
 <!-- <script src="js/bootstrap.min.js"></script> -->
 <script src="js/common.js"></script>
 <script>
-
+//直接跳转到对应的页面
+function goOwnStep(){
+    var token=getToken();
+    if(token===false){
+        return
+    }
+    
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetUserInfo",
+        data: {token:token},
+        success: function (data) {
+            kenPopup.loadingHide()//隐藏加载动画
+            if(data.result){
+                var step=data.data.TheFew;
+                switch(step)
+                {
+                    case 1:
+                        location.href='step1.html'
+                        break;
+                    case 2:
+                        location.href='step2.html'
+                        break;
+                    case 3:
+                        location.href='step3.html'
+                        break;
+                    case 4:
+                        location.href='step4.html'
+                        break;
+                    case 5:
+                        location.href='me.html'
+                        break;
+                    default:
+                        location.href='step1.html'
+                }
+            }else{
+                kenPopup.alert({tips:data.message})
+            }
+        }
+    });
+}
+goOwnStep();
 
 
 //提交表单
@@ -148,7 +191,7 @@ function submitForm(){
             success: function (data) {
                 kenPopup.loadingHide()//隐藏加载动画
                 if(data.result){//如果验证成功跳到跳到下一步 这里的条件改下
-                    location.href='step3.index'
+                    location.href='step3.html'
                 }else{//如果验证失败
                     kenPopup.alert({tips:'提交失败'})
                 }
@@ -159,17 +202,7 @@ function submitForm(){
     }
     
 }
-//获得token
-function getToken(){
-    var token=sessionStorage.getItem('token');
-    if(!token){
-        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
-            location.href='apply.html'
-        }})
-        return false;
-    }
-    return encodeURIComponent(token);
-}
+
 //将紧急联系人 姓名 关系 手机号 格式化为小施需要的形式 例子 张三:父亲:18312345678
 function formatUrgenContact(t1,t2,t3){
     var a=t1 || '无'
@@ -182,7 +215,8 @@ function formatUrgenContact(t1,t2,t3){
 function getForm(){
     var idIsTrue=validateID(),//看身份证号码是否填写正确
         phone1=validatePh("#phone"),
-        phone2=validatePh("#relate_phone");
+        phone2=validatePh("#relate_phone"),
+        weCh=validateWechat('#wechat');
 
     if(!idIsTrue){
         kenPopup.alert({tips:'身份证号码填写有误'})
@@ -190,6 +224,10 @@ function getForm(){
     }
     if(!phone1){
         kenPopup.alert({tips:'银行预留手机号填写有误'})
+        return false;
+    }
+    if(!weCh){
+        kenPopup.alert({tips:'微信账号填写错误'})
         return false;
     }
     if(!phone1){
@@ -293,6 +331,26 @@ function validatePh(tar){
         }
     }   
 }
+
+//微信账号验证 例子my_list上面的id 例子'#relate_phone'
+function validateWechat(tar){
+    var preg=/^[a-zA-Z][^0-9a-zA-Z_-]{5,19}$/
+
+    var val=$(tar).find('input').val().trim()
+    if(!(val.length<=20 && val.length>=6)){
+        vErr(tar,'账号长度不正确')
+        return false;
+    }else{
+        if(preg.test(val)){
+            vSuc(tar)
+            return true;
+        }else{
+            vErr(tar,'微信账号格式出错')
+            return false;
+        }
+    }
+}
+
 
 //提示错误 tar 例子'#name'
 function vErr(tar,tips){

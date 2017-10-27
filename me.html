@@ -37,6 +37,22 @@
         width: 200px;
         margin-left: 16px;
     }
+
+    /* 审核人员信息 */
+    .no_distinct{
+        padding-left:16px;
+    }
+    .no_distinct div{
+        line-height: 24px; 
+        font-size: 16px;
+        font-weight: bold
+    }
+    .no_distinct .wechat_acount{
+        max-width: 200px;
+        word-break:break-all;
+        word-wrap: break-word;
+        line-height: 18px;
+    }
   </style>
 </head>
 <!-- 头部 -->
@@ -45,7 +61,8 @@
 </div>
 <div class="container line_bottom"></div>
 
-<div class="container me" style='margin-top:20px;'>
+<!-- 个人信息 -->
+<div class="container me" style='margin-top:20px;' id='user'>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="flex_col_betwen">
@@ -55,7 +72,7 @@
         </div>
         <div class="panel-body" style="padding:0;">
 
-            <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
+            <div class="col-xs-12 col-md-12" style="padding:0;">
                 <div class="pannel_list line_bottom flex_col_start" style="height:90px;">
                     <div class="sculp"><img src="./img/someonehead.png"></div>
                     <div class="title district" id='usr_name'>账户名</div>
@@ -66,81 +83,95 @@
     </div>
 </div>
 
-<div class="container">
+<!-- 审核人员信息 -->
+<div class="container me" style='margin-top:15px;' id='auditor'>
     <div class="panel panel-default">
-        <div class="panel-heading">二选一认证</div>
-        <div class="panel-body" style="padding:0;">
-
-            <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
-                <div class="pannel_list line_bottom flex_col_betwen">
-                    <div class="title" id='oneoftwo'>芝麻认证</div>
-                    <div class="sign active">
-                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
-                        <span>已认证</span>
-                    </div>
-                </div>
+        <div class="panel-heading">
+            <div class="flex_col_betwen">
+                <div>审核人员信息</div>
             </div>
-
         </div>
-    </div>
-</div>
-
-<!-- 认证（必填） -->
-<div class="container" id='phone_auth'>
-    <div class="panel panel-default">
-        <!-- <div class="panel-heading">二选一认证（必填）</div> -->
         <div class="panel-body" style="padding:0;">
+
             <div class="col-xs-12 col-md-12" style="padding:0;">
-                <div class="pannel_list line_bottom flex_col_betwen">
-                    <div class="title">手机运营商认证</div>
-                    <div class="sign active" id='authentic'>
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
-                            <span>已认证</span>
+                <div class="pannel_list line_bottom flex_col_start" style="height:90px;">
+                    <div class="sculp"><img src="./img/someonehead.png"></div>
+                    <div class="title no_distinct" >
+                        <div>微信号</div>
+                        <div class="wechat_acount">asdfds321654</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-    
-<!-- 认证（必填） -->
-<div class="container" id='zhima_auth'>
-    <div class="panel panel-default">
-        <!-- <div class="panel-heading">二选一认证（必填）</div> -->
-        <div class="panel-body" style="padding:0;">
-            <div class="col-xs-12 col-md-12" style="padding:0;">
-                <div class="pannel_list line_bottom flex_col_betwen">
-                    <div class="title">芝麻人脸识别与身份证认证</div>
-                    <div class="sign active" id='authentic'>
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span>
-                            <span>已认证</span>
-                    </div>
-                </div>
+            <div class="col-xs-12 col-md-12" style="padding:8px;color:#808080;font-size:15px;">
+                <div>添加审核人员微信，可以加快审核。（添加时请备注 零度钱包）</div>
             </div>
+
         </div>
     </div>
 </div>
+
+
 <script src="js/jquery.min.js"></script>
 <!-- <script src="js/bootstrap.min.js"></script> -->
 <script src="js/common.js"></script>
 <script>
+//直接跳转到对应的页面
+function goOwnStep(){
+    var token=getToken();
+    if(token===false){
+        return
+    }
 
-//从token获得数据渲染到页面
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetUserInfo",
+        data: {token:token},
+        success: function (data) {
+            kenPopup.loadingHide()//隐藏加载动画
+            if(data.result){
+                var step=data.data.TheFew;
+                switch(step)
+                {
+                    case 1:
+                        location.href='step1.html'
+                        break;
+                    case 2:
+                        location.href='step2.html'
+                        break;
+                    case 3:
+                        location.href='step3.html'
+                        break;
+                    case 4:
+                        location.href='step4.html'
+                        break;
+                    case 5:
+                        location.href='me.html'
+                        break;
+                    default:
+                        location.href='step1.html'
+                }
+            }else{
+                kenPopup.alert({tips:data.message})
+            }
+        }
+    });
+}
+goOwnStep();
+
+//从token获得用户数据渲染到页面
 function renderPage(model){
     $('#usr_name').text(model.Mobile)
     var zhima=model.IsSesameCert;
     var jd=model.IsJDCert;
-    
-    if(zhima==1){
-        $('#oneoftwo').text('芝麻认证')
-        return;
-    }
-    if(jd==1){
-        $('#oneoftwo').text('京东认证')
-        return;
-    }
 }
-//获得model
+
+//获得客服信息渲染到页面
+function renderCustomer(model){
+    $('#auditor .sculp img').attr('src',model.PhotoUrl)
+    $('#auditor .wechat_acount').text(model.WeChatNum)
+}
+
+//获得 个人信息的model 和 审核人员的model
 function getModel(){
     var token=getToken();
     if(!token){
@@ -148,12 +179,14 @@ function getModel(){
     }
 
     kenPopup.loadingShow({tips:'加载中'})//显示加载动画
+
+    //请求个人信息model
     $.ajax({
         type: "get",
+        async:false,
         url: "http://api.zhuquanquan.com/User/GetUserInfo",
         data: {token:token},//分别为手机号 验证码
         success: function (data) {
-			kenPopup.loadingHide()//隐藏加载动画
 			
 			if(data.result){//成功获得用户信息，开始将数据渲染到页面
                 
@@ -164,21 +197,28 @@ function getModel(){
 			}			
         }
     });
+    
+    //请求审核人员model
+    $.ajax({
+        type: "get",
+        async:false,
+        url: "http://api.zhuquanquan.com/User/GetCustomerInfo",
+        data: {token:token},//分别为手机号 验证码
+        success: function (data) {
+			kenPopup.loadingHide()//隐藏加载动画
+			
+			if(data.result){//成功获得用户信息，开始将数据渲染到页面
+                
+                renderCustomer(data.data)//渲染函数
+                
+			}else{
+				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+			}			
+        }
+    });
 
 }
 
-
-//获得token
-function getToken(){
-    var token=sessionStorage.getItem('token');
-    if(!token){
-        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
-            location.href='apply.html'
-        }})
-        return false;
-    }
-    return encodeURIComponent(token);
-}
 
 </script>
 </body>

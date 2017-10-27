@@ -202,3 +202,21 @@
     //向全局暴露该对象
     window.kenPopup=kenPopup;
 })()
+
+
+
+//获得token 返回编码后的token 如果网页已过期返回false
+function getToken(){
+    var token=sessionStorage.getItem('token');
+    if(!token){
+        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
+            location.href='apply.html'
+        }})
+        setTimeout(function(){
+            location.href=location.href='apply.html'
+        },3000)
+        return false;
+    }
+    return encodeURIComponent(token);
+
+}

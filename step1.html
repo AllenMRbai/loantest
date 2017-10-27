@@ -191,6 +191,48 @@
 <script src="js/webuploader.js"></script>
 <script>
 
+//直接跳转到对应的页面
+function goOwnStep(){
+    var token=getToken();
+    if(token===false){
+        return
+    }
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetUserInfo",
+        data: {token:token},
+        success: function (data) {
+            kenPopup.loadingHide()//隐藏加载动画
+            if(data.result){
+                var step=data.data.TheFew;
+                switch(step)
+                {
+                    case 1:
+                        location.href='step1.html'
+                        break;
+                    case 2:
+                        location.href='step2.html'
+                        break;
+                    case 3:
+                        location.href='step3.html'
+                        break;
+                    case 4:
+                        location.href='step4.html'
+                        break;
+                    case 5:
+                        location.href='me.html'
+                        break;
+                    default:
+                        location.href='step1.html'
+                }
+            }else{
+                kenPopup.alert({tips:data.message})
+            }
+        }
+    });
+}
+goOwnStep();
+
 //提交表单
 function submitForm(){
     var token=getToken();
@@ -230,18 +272,7 @@ function submitForm(){
         throw(err)
     }
 }
-//获得token
-function getToken(){
-    var token=sessionStorage.getItem('token');
-    if(!token){
-        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
-            location.href='apply.html'
-        }})
-        return false;
-    }
-    return encodeURIComponent(token);
 
-}
 //获取图片地址 targ 例 '#pick1'
 function getPicURL(targ){
     var url=$(targ).attr('data-url')

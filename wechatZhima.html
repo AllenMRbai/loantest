@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>芝麻认证跳转页</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/steps.css" rel="stylesheet">
+  <style>
+      .big_pic img{
+        width: 100%;
+        height: auto;
+      }
+      .goback_box{
+          text-align: center;
+          font-size: 16px;
+          color:#808080;
+          margin-top:20px;
+      }
+      .goback{
+          padding:20px 0;
+          color:#0baef2;
+      }
+  </style>
+</head>
+
+
+<div class="container" style="padding:0;margin-top:10px">
+    <div class="col-xs-12 col-md-12 big_pic" style="padding:0;"><img src="./img/prompt_pic.jpg"></div>
+</div>
+
+<div class="container">
+    <div class="col-xs-12 col-md-12 goback_box">认证完毕，请点击&nbsp;&nbsp;<span class="goback" onclick='location.href="step3.html"'>这里返回</span></div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<!-- <script src="js/bootstrap.min.js"></script> -->
+<script src="js/common.js"></script>
+<script>
+//该函数返回的数据为编码后的token,如果网页已过期返回的是false
+var token=getToken();
+
+</script>
+</body>
+</html>

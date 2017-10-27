@@ -40,10 +40,10 @@
     </div>
 </div>
 
-<!-- 二选一认证（必填） -->
-<div class="container" id='require' style='margin-top:20px;'>
+<!-- 必填项 -->
+<div class="container" style='margin-top:20px;'>
     <div class="panel panel-default">
-        <div class="panel-heading">二选一认证（必填）</div>
+        <div class="panel-heading">必填项</div>
         <div class="panel-body" style="padding:0;">
 
             <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
@@ -55,11 +55,21 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- 选填项（选填该项，可增加申请额度） -->
+<div class="container" style='margin-top:20px;'>
+    <div class="panel panel-default">
+        <div class="panel-heading">选填项（选填该项，可增加申请额度）</div>
+        <div class="panel-body" style="padding:0;">
+
             <div class="col-xs-12 col-md-12" style="padding:0;" id='jdong'>
                 <div class="pannel_list flex_col_betwen">
-                     <div class="title">京东认证</div>
-                     <div class="sign">
-                         <span>未认证</span>
+                        <div class="title">京东认证</div>
+                        <div class="sign">
+                            <span>未认证</span>
                     </div>
                 </div>
             </div>
@@ -76,10 +86,55 @@
 <!-- <script src="js/bootstrap.min.js"></script> -->
 <script src="js/common.js"></script>
 <script>
-var hasAuthenticed=false;//false表示用户还没认证过任何一项，此时点击按钮会跳转到对应的认证页面。当为true时,点级按钮不会跳转
+//直接跳转到对应的页面
+function goOwnStep(){
+    var token=getToken();
+    if(token===false){
+        return
+    }
+
+    $.ajax({
+        type: "get",
+        url: "http://api.zhuquanquan.com/User/GetUserInfo",
+        data: {token:token},
+        success: function (data) {
+            kenPopup.loadingHide()//隐藏加载动画
+            if(data.result){
+                var step=data.data.TheFew;
+                switch(step)
+                {
+                    case 1:
+                        location.href='step1.html'
+                        break;
+                    case 2:
+                        location.href='step2.html'
+                        break;
+                    case 3:
+                        location.href='step3.html'
+                        break;
+                    case 4:
+                        location.href='step4.html'
+                        break;
+                    case 5:
+                        location.href='me.html'
+                        break;
+                    default:
+                        location.href='step1.html'
+                }
+            }else{
+                kenPopup.alert({tips:data.message})
+            }
+        }
+    });
+}
+goOwnStep();
+
+var hasAuZhima=false;//false表示用户还没认证该项，此时点击按钮会跳转到对应的认证页面。当为true时,点级按钮不会跳转
+var hasAuJdong=false//false表示用户还没认证该项，此时点击按钮会跳转到对应的认证页面。当为true时,点级按钮不会跳转
+
 //页面跳转
 $('#zhima').click(function(){//芝麻认证的页面跳转
-    if(hasAuthenticed){
+    if(hasAuZhima){
         return;
     }
 
@@ -94,20 +149,21 @@ $('#zhima').click(function(){//芝麻认证的页面跳转
         url: "http://api.zhuquanquan.com/User/GetZmopUrl",
         data: {token:token},
         success: function (data) {
-			kenPopup.loadingHide()//隐藏加载动画
-			
-			if(data.result){
+            kenPopup.loadingHide()//隐藏加载动画
+            
+            if(data.result){
                 
-               location.href=data.data;
+            location.href=data.data;
                 
-			}else{
-				kenPopup.alert({tips:'出现意外，请关闭页面重试'})
-			}			
+            }else{
+                kenPopup.alert({tips:'出现意外，请关闭页面重试'})
+            }			
         }
     });
+
 })
 $('#jdong').click(function(){//京东认证的页面跳转
-    if(hasAuthenticed){
+    if(hasAuJdong){
         return;
     }
 
@@ -133,8 +189,8 @@ $('#jdong').click(function(){//京东认证的页面跳转
 			}			
         }
     });
-
 })
+    
 //从token获得数据渲染到页面
 function renderPage(model){
     var zhima=model.IsSesameCert;
@@ -143,14 +199,12 @@ function renderPage(model){
     var htmlActive='<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:15px;"></span><span>已认证</span>'
     // var htmlDefault='<span>未认证</span>'
     if(zhima==1){
-        hasAuthenticed=true;
+        hasAuZhima=true;
         $('#zhima').find('.sign').html(htmlActive).addClass('active')
-        return;
     }
     if(jd==1){
-        hasAuthenticed=true;
+        hasAuJdong=true;
         $('#jdong').find('.sign').html(htmlActive).addClass('active')
-        return
     }
 }
 //获得model
@@ -188,8 +242,8 @@ function submitForm(){
         return;
     }
 
-    if(!hasAuthenticed){
-        kenPopup.alert({tips:'请至少完成一个认证'})
+    if(!hasAuZhima){
+        kenPopup.alert({tips:'完成芝麻认证，方可进入下一步'})
         return
     }
 
@@ -213,17 +267,6 @@ function submitForm(){
 
 }
 
-//获得token
-function getToken(){
-    var token=sessionStorage.getItem('token');
-    if(!token){
-        kenPopup.alert({tips:'该网页已过期，请重新登录！',fun1:function(){
-            location.href='apply.html'
-        }})
-        return false;
-    }
-    return encodeURIComponent(token);
-}
 
 </script>
 </body>

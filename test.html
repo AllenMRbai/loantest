@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>个人中心样式调整</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/steps.css" rel="stylesheet">
+  <style>
+    .me .status{
+        font-size: 13px;
+        color:#808080;
+    }
+    .me .status.pass{
+        font-size: 13px;
+        color:#08c193;
+    }
+    .me .sculp{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        border:1px solid #b3b3b3;
+    }
+    .me .sculp img{
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .me .district{
+        overflow: hidden;
+        white-space:nowrap;
+        text-overflow: ellipsis;
+        width: 200px;
+        margin-left: 16px;
+    }
+    /* 审核人员 */
+    .no_distinct{
+        padding-left:16px;
+    }
+    .no_distinct div{
+        line-height: 24px; 
+        font-size: 16px;
+        font-weight: bold
+    }
+    .no_distinct .wechat_acount{
+        max-width: 200px;
+        word-break:break-all;
+        word-wrap: break-word;
+        line-height: 18px;
+    }
+  </style>
+  
+</head>
+<!-- 头部 -->
+<div class="container" style="padding:0 10px;">
+    <div class="col-xs-4 col-md-3 top_left_title"><img src="./img/common_title_black.png"></div>
+</div>
+<div class="container line_bottom"></div>
+
+<div class="container me" style='margin-top:20px;' id='user'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="flex_col_betwen">
+                <div>您的个人信息</div>
+                <div class="status">审核中</div>
+            </div>
+        </div>
+        <div class="panel-body" style="padding:0;">
+
+            <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
+                <div class="pannel_list line_bottom flex_col_start" style="height:90px;">
+                    <div class="sculp"><img src="./img/someonehead.png"></div>
+                    <div class="title district" id='usr_name'>账户名</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container me" style='margin-top:15px;'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="flex_col_betwen">
+                <div>审核人员信息</div>
+            </div>
+        </div>
+        <div class="panel-body" style="padding:0;">
+
+            <div class="col-xs-12 col-md-12" style="padding:0;" id="zhima">
+                <div class="pannel_list line_bottom flex_col_start" style="height:90px;">
+                    <div class="sculp"><img src="./img/someonehead.png"></div>
+                    <div class="title no_distinct" id='auditor'>
+                        <div>微信号</div>
+                        <div class="wechat_acount">asdfds321654</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12" style="padding:8px;color:#808080;font-size:15px;">
+                <div>添加审核人员微信，可以加快审核。（添加时请备注 零度钱包）</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<!-- <script src="js/bootstrap.min.js"></script> -->
+<script src="js/common.js"></script>
+<script>
+
+</script>
+</body>
+</html>
